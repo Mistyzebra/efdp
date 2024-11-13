@@ -1,3 +1,3 @@
 # ErSouFishing
-Enterprise-class fishing drill on a docker-based platform
+Enterprise-class Fishing Drill on Docker-based Platform
 mailu+gophish
