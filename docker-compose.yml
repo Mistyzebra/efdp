@@ -20,16 +20,16 @@ services:
       options:
         tag: mailu-front
     ports:
-      - "<serverip>:8088:80"
-      - "<serverip>:4433:443"
-      - "<serverip>:25:25"
-      - "<serverip>:465:465"
-      - "<serverip>:587:587"
-      - "<serverip>:110:110"
-      - "<serverip>:995:995"
-      - "<serverip>:143:143"
-      - "<serverip>:993:993"
-      - "<serverip>:4190:4190"
+      - "serverip:8088:80"
+      - "serverip:4433:443"
+      - "serverip:25:25"
+      - "serverip:465:465"
+      - "serverip:587:587"
+      - "serverip:110:110"
+      - "serverip:995:995"
+      - "serverip:143:143"
+      - "serverip:993:993"
+      - "serverip:4190:4190"
     networks:
       - default
       - webmail
