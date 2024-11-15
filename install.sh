@@ -68,4 +68,7 @@ else
   exit 1
 fi
 
+cp docker-compose.yml /opt/efdp/docker-compose.yml
+cp mailu.env /opt/efdp/mailu/mailu.env
+
 echo "安装完成。"
