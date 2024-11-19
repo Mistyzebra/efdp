@@ -10,10 +10,12 @@ fi
 read -p "请输入服务器公网IP: " server_ip
 read -p "请输入邮件服务器域名 (example.com): " domain_name
 read -p "请输入邮件服务器管理员密码 (yourpassword): " password
+read -p "请输入GoPhish服务器管理员密码 (yourpassword): " gppassword
 
-# 替换docker-compose.yml中的serverip字段
+# 替换docker-compose.yml中的serverip和Gophish字段
 if [ -f docker-compose.yml ]; then
   sed -i "s/serverip/$server_ip/g" docker-compose.yml
+  sed -i "s/gppassword/$gppassword/g" docker-compose.yml
 else
   echo "docker-compose.yml 文件不存在。"
   exit 1
@@ -40,12 +42,12 @@ echo "2. 生成自签名证书"
 read -p "请输入选项 (1 或 2): " cert_option
 
 if [ "$cert_option" -eq 1 ]; then
-  read -p "请输入自定义证书路径: " cert_path
-  read -p "请输入自定义密钥路径: " key_path
+  read -p "请输入自定义证书路径: (crt或pem格式)" cert_path
+  read -p "请输入自定义密钥路径: (key或pem格式)" key_path
 
   if [ -f "$cert_path" ] && [ -f "$key_path" ]; then
-    cp "$cert_path" /opt/efdp/mailu/certs/server.crt
-    cp "$key_path" /opt/efdp/mailu/certs/server.key
+    cp "$cert_path" /opt/efdp/mailu/certs/cert.pem
+    cp "$key_path" /opt/efdp/mailu/certs/key.pem
     cp "$cert_path" /opt/efdp/gophish/certs/server.crt
     cp "$key_path" /opt/efdp/gophish/certs/server.key
   else
@@ -56,12 +58,12 @@ if [ "$cert_option" -eq 1 ]; then
 elif [ "$cert_option" -eq 2 ]; then
   # 生成自签名证书
   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /opt/efdp/mailu/certs/server.key \
-    -out /opt/efdp/mailu/certs/server.crt \
+    -keyout /opt/efdp/mailu/certs/key.pem \
+    -out /opt/efdp/mailu/certs/cert.pem \
     -subj "/CN=$domain_name"
 
-  cp /opt/efdp/mailu/certs/server.crt /opt/efdp/gophish/certs/server.crt
-  cp /opt/efdp/mailu/certs/server.key /opt/efdp/gophish/certs/server.key
+  cp /opt/efdp/mailu/certs/cert.pem /opt/efdp/gophish/certs/server.crt
+  cp /opt/efdp/mailu/certs/key.pem /opt/efdp/gophish/certs/server.key
 
 else
   echo "无效的选项。"
