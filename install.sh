@@ -112,6 +112,9 @@ cp gophish.db /opt/efdp/gophish/gophish.db
 cp gophish_config.json /opt/efdp/gophish/config.json
 cp mailu.env /opt/efdp/mailu/mailu.env
 
+chmod -R 666 /opt/efdp/mailu/
+chmod -R 666 /opt/efdp/gophish/
+
 echo "安装完成。"
 echo "请在防火墙上开启以下端口："
 echo "8088,4433,25,465,587,110,995,143,993,4190,3333,80,443,8080"
