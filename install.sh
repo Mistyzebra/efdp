@@ -113,3 +113,8 @@ cp gophish_config.json /opt/efdp/gophish/config.json
 cp mailu.env /opt/efdp/mailu/mailu.env
 
 echo "安装完成。"
+echo "请在防火墙上开启以下端口："
+echo "8088,4433,25,465,587,110,995,143,993,4190,3333,80,443,8080"
+echo "在/opt/efdp目录下使用docker compose up -d启动。"
+echo "mailu邮件服务器后台为8088/4433(tls)端口，gophish后台为3333端口，钓鱼页面为80/443端口"
+echo "*请确保25端口开放能给收发邮箱"
