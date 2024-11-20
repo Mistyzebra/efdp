@@ -19,7 +19,7 @@ if [[ ! $server_ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
   exit 1
 fi
 
-read -p "请输入邮件服务器域名 (example.com): " domain_name
+read -p "请输入邮件服务器根域名 (example.com): " domain_name
 if [[ ! $domain_name =~ ^[a-zA-Z0-9.-]+$ ]]; then
   echo "无效的域名。"
   exit 1
@@ -100,10 +100,11 @@ elif [ "$cert_option" -eq 2 ]; then
   openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /opt/efdp/mailu/certs/key.pem \
     -out /opt/efdp/mailu/certs/cert.pem \
-    -subj "/CN=$domain_name"
+    -subj "/CN=efdp.$domain_name"
 
   cp /opt/efdp/mailu/certs/cert.pem /opt/efdp/gophish/certs/server.crt
   cp /opt/efdp/mailu/certs/key.pem /opt/efdp/gophish/certs/server.key
+  echo "已生成efdp.$domain_name 域名证书"
 fi
 
 # 复制配置文件到目标目录
@@ -120,4 +121,5 @@ echo "- 请在防火墙上开启以下端口："
 echo "8088,4433,25,465,587,110,995,143,993,4190,3333,80,443,8080"
 echo "- 在/opt/efdp目录下使用docker compose up -d启动。"
 echo "- mailu邮件服务器后台为8088/4433(tls)端口，gophish后台为3333端口，钓鱼页面为80/443端口"
+echo "请通过efdp.$domain_name 访问"
 echo "- *请确保25端口开放能给收发邮箱"
