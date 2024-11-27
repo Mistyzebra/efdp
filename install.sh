@@ -112,6 +112,7 @@ fi
 # 复制配置文件到目标目录
 cp docker-compose.yml /opt/efdp/docker-compose.yml
 cp gophish.db /opt/efdp/gophish/gophish.db
+chmod 666 gophish_config.json
 cp gophish_config.json /opt/efdp/gophish/config.json
 cp mailu.env /opt/efdp/mailu/mailu.env
 
