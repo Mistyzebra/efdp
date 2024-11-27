@@ -31,7 +31,7 @@ if [[ ! $domain_name =~ ^[a-zA-Z0-9.-]+$ ]]; then
   exit 1
 fi
 
-read -p "请输入邮件服务器管理员密码: " password
+read -p "请输入邮件服务器管理员密码: " mailpassword
 read -p "请输入GoPhish服务器管理员密码: " gppassword
 
 # 检查配置文件是否存在
@@ -68,7 +68,7 @@ echo "配置文件修改.."
 sed -i "s/serverip/$server_ip/g" docker-compose.yml
 sed -i "s/gppassword/$gppassword/g" docker-compose.yml
 sed -i "s/example.com/$domain_name/g" mailu.env
-sed -i "s/yourpassword/$password/g" mailu.env
+sed -i "s/yourpassword/$mailpassword/g" mailu.env
 
 # 处理邮服证书
 echo "处理邮件服务器证书.."
@@ -152,8 +152,10 @@ chmod -R 666 /opt/efdp/gophish/
 
 echo "安装完成。"
 echo "- 在/opt/efdp目录下使用docker compose up -d启动。"
-echo "- mailu邮件服务器后台为8088/4433(tls)端口，gophish后台为3333端口，钓鱼页面为80/443端口"
-echo "  请通过efdp.$domain_name 访问"
 echo "- 请在防火墙上开启以下端口："
 echo "  8088,4433,25,465,587,110,995,143,993,4190,3333,80,443,8080"
 echo "- *请确保25端口开放能给收发邮箱"
+echo "- mailu邮件服务器后台(http为8088端口)：https://$server_ip:4433/或https://efdp.$domain_name:4433"
+echo "  管理员凭证为：admin/$mailpassword"
+echo "- gophish后台：http://$server_ip:3333，钓鱼页面为80/443端口"
+echo "  管理员凭证为：admin/$gppassword"
