@@ -34,7 +34,7 @@ services:
       - default
       - webmail
     volumes:
-      - "/opt/efdp/mailu/certs:/certs"
+      - "/opt/efdp/mailu/certs:/certs:rw"
       - "/opt/efdp/mailu/overrides/nginx:/overrides:ro"
     depends_on:
       - resolver
@@ -130,31 +130,6 @@ services:
       - 192.168.203.254
 
   # Optional services
-
-  gofish:
-    image: gophish/gophish
-    container_name: gophish
-    restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-    networks:
-      - default
-    ports:
-      - "0.0.0.0:3333:3333"
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:443:443" #如使用TLS开启443的绑定
-      - "0.0.0.0:8080:8080"
-    volumes:
-      - "/opt/efdp/gophish/gophish.db:/opt/gophish/gophish.db" #持久化数据
-      - "/opt/efdp/gophish/certs:/opt/gophish/certs" #证书
-      - "/opt/efdp/gophish/config.json:/opt/gophish/config.json" #配置文件
-    environment:
-      - GOPHISH_INITIAL_ADMIN_PASSWORD=gppassword
-    dns:
-      - 192.168.203.254
-
   # Webmail
   webmail:
     image: ${DOCKER_ORG:-ghcr.io/mailu}/${DOCKER_PREFIX:-}webmail:${MAILU_VERSION:-2024.06}
@@ -171,6 +146,30 @@ services:
       - webmail
     depends_on:
       - front
+  # Gophish
+  gofish:
+    image: gophish/gophish
+    container_name: gophish
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+    networks:
+      - default
+    ports:
+      - "0.0.0.0:3333:3333"
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443" #如使用TLS开启443的绑定
+      - "0.0.0.0:8080:8080"
+    volumes:
+      - "/opt/efdp/gophish/gophish.db:/opt/gophish/gophish.db:rw" #持久化数据
+      - "/opt/efdp/gophish/certs:/opt/gophish/certs:rw" #证书
+      - "/opt/efdp/gophish/config.json:/opt/gophish/config.json:rw" #配置文件
+    environment:
+      - GOPHISH_INITIAL_ADMIN_PASSWORD=gppassword
+    dns:
+      - 192.168.203.254
 
 networks:
   default:
